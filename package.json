@@ -28,5 +28,15 @@
   ],
   "scripts": {
     "test": "node ./test"
+  },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": {
+      "ie": [ "8", "9" ],
+      "firefox": ["15", "nightly"],
+      "chrome": ["22", "canary"],
+      "opera": ["12"],
+      "safari": ["5.1"]
+    }
   }
 }
