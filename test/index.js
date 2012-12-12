@@ -31,3 +31,22 @@ test("correct case", function (t) {
     t.equal(correct, undefined)
     t.end()
 })
+
+test("number schema", function (t) {
+    var schema = validate({
+        foo: Number
+    }, "error")
+
+    var correct = schema({
+        foo: 42
+    })
+
+    t.equal(correct, undefined)
+
+    var error = schema({
+        foo: "blaz"
+    })
+
+    t.equal(error, "errorfoo is not a number")
+    t.end()
+})

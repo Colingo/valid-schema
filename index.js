@@ -23,10 +23,18 @@ function valid(key, schema, value) {
         return isBoolean(value, key)
     } else if (schema === Object) {
         return isObject(value, key)
+    } else if (schema === Number) {
+        return isNumber(value, key)
     } else if (Array.isArray(schema)) {
         return isArray(value, key, schema[0])
     } else {
         return key + " is not in schema"
+    }
+}
+
+function isNumber(value, key) {
+    if (typeof value !== "number") {
+        return key + " is not a number"
     }
 }
 
