@@ -1,6 +1,6 @@
 {
   "name": "valid-schema",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Validate objects against schemas",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
@@ -32,11 +32,24 @@
   "testling": {
     "files": "test/*.js",
     "browsers": {
-      "ie": [ "8", "9" ],
-      "firefox": ["15", "nightly"],
-      "chrome": ["22", "canary"],
-      "opera": ["12"],
-      "safari": ["5.1"]
+      "ie": [
+        "8",
+        "9"
+      ],
+      "firefox": [
+        "15",
+        "nightly"
+      ],
+      "chrome": [
+        "22",
+        "canary"
+      ],
+      "opera": [
+        "12"
+      ],
+      "safari": [
+        "5.1"
+      ]
     }
   }
 }
