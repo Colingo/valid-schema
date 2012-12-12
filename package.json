@@ -1,0 +1,32 @@
+{
+  "name": "valid-schema",
+  "version": "0.1.0",
+  "description": "Validate objects against schemas",
+  "keywords": [],
+  "author": "Raynos <raynos2@gmail.com>",
+  "repository": "git://github.com/Colingo/valid-schema.git",
+  "main": "index",
+  "homepage": "https://github.com/Colingo/valid-schema",
+  "contributors": [
+    {
+      "name": "Raynos"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Colingo/valid-schema/issues",
+    "email": "raynos2@gmail.com"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tape": "~0.1.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/Colingo/valid-schema/raw/master/LICENSE"
+    }
+  ],
+  "scripts": {
+    "test": "node ./test"
+  }
+}
