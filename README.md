@@ -21,6 +21,7 @@ var isValid = validate({
     foo: String
     , bar: Boolean
     , x: Object
+    , y: Number
     , foos: [String]
 }, "not valid: ")
 
