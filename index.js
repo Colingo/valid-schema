@@ -27,8 +27,6 @@ function valid(key, schema, value) {
         return isNumber(value, key)
     } else if (Array.isArray(schema)) {
         return isArray(value, key, schema[0])
-    } else {
-        return key + " is not in schema"
     }
 }
 
