@@ -44,10 +44,12 @@
       ],
       "firefox": [
         "15",
+        "17",
         "nightly"
       ],
       "chrome": [
         "22",
+        "23",
         "canary"
       ],
       "opera": [
