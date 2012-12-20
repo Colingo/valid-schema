@@ -1,70 +1,94 @@
+var Enum = require("./enum")
+
+var validators = [
+    Enum.validator
+    , is(String, "string")
+    , is(Boolean, "boolean")
+    , is(Object, "object")
+    , is(Number, "number")
+    , [Array.isArray, function isArray(value, key, schema) {
+        if (!Array.isArray(value)) {
+            return key + " is not an array"
+        }
+
+        var subSchema = schema[0]
+
+        for (var i = 0; i < value.length; i++) {
+            var subValue = value[i]
+                , isValid = valid(key, subSchema, subValue)
+
+            if (isValid) {
+                return isValid
+            }
+        }
+    }]
+    , [function checkFunction(value) {
+        return typeof value === "function"
+    }, function validateFunction(value, key, schema) {
+        var error = schema(value, key)
+
+        if (error) {
+            return key + " " + error
+        }
+    }]
+    , [function checkObject(value) {
+        return value instanceof Object
+    }, function isObject(value, key, subSchema) {
+        if (typeof value !== "object") {
+            return key + " is not an object"
+        }
+
+        return validate(subSchema, key + ".")(value)
+    }]
+]
+
 module.exports = validate
 
-function validate(definition, name) {
-    return function (data) {
-        var keys = Object.keys(data)
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i]
-                , value = data[key]
-                , schema = definition[key]
-                , error = valid(key, schema, value)
+function instance(type) {
+    return
+}
 
-            if (error) {
-                return name + error
-            }
+function is(type, name) {
+    return [function check(value) {
+        return value === type
+    }, function validator(value, key) {
+        if (typeof value !== name) {
+            return key + " is not a " + name
+        }
+    }]
+}
+
+function valid(key, schema, value) {
+    for (var i = 0; i < validators.length; i++) {
+        var tuple = validators[i]
+            , check = tuple[0]
+            , validator = tuple[1]
+
+        if (check(schema)) {
+            return validator(value, key, schema)
         }
     }
 }
 
-function valid(key, schema, value) {
-    if (schema === String) {
-        return isString(value, key)
-    } else if (schema === Boolean) {
-        return isBoolean(value, key)
-    } else if (schema === Object) {
-        return isObject(value, key)
-    } else if (schema === Number) {
-        return isNumber(value, key)
-    } else if (Array.isArray(schema)) {
-        return isArray(value, key, schema[0])
-    }
-}
+function validate(definition, name) {
+    name = name || ""
 
-function isNumber(value, key) {
-    if (typeof value !== "number") {
-        return key + " is not a number"
-    }
-}
+    return function (data) {
+        var keys = Object.keys(definition)
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i]
+                , value = data[key]
+                , schema = definition[key]
 
-function isString(value, key) {
-    if (typeof value !== "string") {
-        return key + " is not a string"
-    }
-}
+            if (!(key in data)) {
+                return name + key + " is required"
+            }
 
-function isBoolean(value, key) {
-    if (typeof value !== "boolean") {
-        return key + " is not a boolean"
-    }
-}
+            var error = valid(key, schema, value)
 
-function isObject(value, key) {
-    if (typeof value !== "object") {
-        return key + " is not an object"
-    }
-}
-
-function isArray(value, key, subSchema) {
-    if (!Array.isArray(value)) {
-        return key + " is not an array"
-    }
-
-    for (var i = 0; i < value.length; i++) {
-        var subValue = value[i]
-            , isValid = valid(key, subSchema, subValue)
-
-        if (isValid) {
-            return isValid
+            if (error) {
+                return name + error
+            }
         }
     }
 }
