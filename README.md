@@ -48,7 +48,7 @@ console.log("correct", correct)
 
 ## kitchen sink
 
-```
+```js
 var ObjectID = String
 
 var schema = validate({

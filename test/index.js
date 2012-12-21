@@ -78,7 +78,7 @@ test("enum case", function (t) {
         foo: "four"
     })
 
-    t.equal(error, "four is not a valid enum member")
+    t.equal(error, "four is not a valid enum member for foo")
 
     t.end()
 })

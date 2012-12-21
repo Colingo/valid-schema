@@ -8,7 +8,7 @@ $enum.validator = [function check(value) {
     })
 
     if (!valid) {
-        return value + " is not a valid enum member"
+        return value + " is not a valid enum member for " + key
     }
 }]
 
