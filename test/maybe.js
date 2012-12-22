@@ -3,48 +3,24 @@ var test = require("tape")
     , validate = require("../index")
     , Maybe = require("../maybe")
 
-test("maybe schema", function (t) {
+test("maybe schema", function (assert) {
     var schema = validate({
-        bar: Maybe(String)
+        bar: Maybe(Number)
     })
 
-    var correct = schema({
-        bar: "foo"
-    })
-
-    t.equal(correct, null)
-
-    var correct2 = schema({
-        bar: null
-    })
-
-    t.equal(correct2, null)
-
-    var correct3 = schema({
-        bar: undefined
-    })
-
-    t.equal(correct3, null)
-
+    var correct = schema({ bar: 43 })
+    var correct2 = schema({ bar: null })
+    var correct3 = schema({ bar: undefined })
     var correct4 = schema({})
+    var error = schema({ bar: "foo"})
 
-    t.equal(correct4, null)
+    assert.deepEqual(
+        [null, null, null, null]
+        , [correct, correct2, correct3, correct4]
+    )
+    assert.deepEqual([
+        "bar is not a number"
+    ], error)
 
-    var error = schema({
-        bar: 42
-    })
-
-    t.deepEqual(error, [
-        "bar is not a string"
-    ])
-
-    var error2 = schema({
-        foo: 45
-    })
-
-    t.deepEqual(error2, [
-        "foo is not in schema"
-    ])
-
-    t.end()
+    assert.end()
 })

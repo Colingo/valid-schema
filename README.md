@@ -107,6 +107,198 @@ var correct = schema({
 console.log("large schema is correct?", correct)
 ```
 
+## Docs
+
+### `validate`
+
+validate takes an object literal consisting of keys and validator
+functions.
+
+It then returns a validation function. Which can be called with
+objects. If the object matches the initial schema then null is
+returned otherwise an array of validation errors is returned.
+
+If a property in the object is not in the schema then a
+    "prop is not in schema" error is returned
+
+## Validators
+
+### Builtins
+
+`Number`, `Boolean`, `String` and `Object` are valid validators
+    which check whether the value for that property is of the
+    relevant type.
+
+```js
+var assert = require("assert")
+var validate = require("valid-schema")
+
+var schema = validate({
+    foo: Object
+    , bar: Number
+})
+
+var correct = schema({ foo: { baz: 42 }, bar: 42 })
+var wrong = schema({ foo: 42, bar: false, extra: "noise" })
+
+assert.equal(null, correct)
+assert.deepEqual([
+    "foo is not an object"
+    , "bar is not a number"
+    , "extra is not in schema"
+], wrong)
+console.log("correct", correct, "wrong", wrong)
+```
+
+### Arbitary functions
+
+An arbitary function is a validator if it takes `(value, key)`
+    as parameters and either returns nothing or a single
+    validation error
+
+```js
+var assert = require("assert")
+var validate = require("valid-schema")
+
+var schema = validate({
+    magic: function (value) {
+        if (value === 42) {
+            return
+        }
+
+        return "wrong magic value!"
+    }
+})
+
+var correct = schema({ magic: 42 })
+var wrong = schema({ magic: "wrong" })
+
+assert.equal(null, correct)
+assert.deepEqual(["wrong magic value!"], wrong)
+console.log("correct", correct, "wrong", wrong)
+```
+
+### Arrays
+
+If a validator is an array then it's expected the value will
+    be an array and that each member of the array matches
+    the first value in validator
+
+```js
+var assert = require("assert")
+var validate = require("valid-schema")
+
+var schema = validate({
+    foos: [String]
+    , magics: [function (v) {
+        if (v) {
+            return "no"
+        }
+    }]
+})
+
+var correct = schema({ foos: ["foo"], magics: [null, false] })
+var wrong = schema({ foos: "foo", magics: [42] })
+
+assert.equal(null, correct)
+assert.deepEqual([
+    "foos is not an array"
+    , "no"
+], wrong)
+console.log("correct", correct, "wrong", wrong)
+```
+
+### Nested objects
+
+If you use nested objects in the schema then those nested
+    objects become sub schemas. Meaning that the value of the
+    property must match the nested object as if it's a schema.
+
+```js
+var assert = require("assert")
+var validate = require("valid-schema")
+
+var schema = validate({
+    foo: {
+        bar: String
+        , baz: [Number]
+    }
+})
+
+var correct = schema({ foo: { bar: "foo", baz: [1, 2, 3] } })
+var wrong = schema({ foo: "baz" })
+var wrong2 = schema({ foo: { bar: 42, baz: {} } })
+
+assert.equal(null, correct)
+assert.deepEqual([
+    "foo.value cannot be validated"
+], wrong)
+assert.deepEqual([
+    "foo.bar is not a string"
+    , "foo.baz is not an array"
+], wrong2)
+console.log("correct", correct, "wrong", wrong, "wrong2", wrong2)
+```
+
+### Enum
+
+Enums allow you to specifically enumerate all the allowed values
+    for a particular property.
+
+```js
+var assert = require("assert")
+var validate = require("valid-schema")
+var Enum = require("valid-schema/enum")
+
+var schema = validate({
+    foo: Enum("one", "two", "three")
+})
+
+var correct = schema({ foo: "one" })
+var wrong = schema({ foo: "four" })
+
+assert.equal(null, correct)
+assert.deepEqual([
+    "four is not a valid enum member for foo"
+], wrong)
+
+console.log("correct", correct, "wrong", wrong)
+```
+
+### Maybe
+
+Maybe allows you to specificy properties that may be validated
+    by a validator but could also be `null`, `undefined` or just
+    non existant
+
+```js
+var assert = require("assert")
+
+var validate = require("valid-schema")
+var Maybe = require("valid-schema/maybe")
+
+var schema = validate({
+    bar: Maybe(Number)
+})
+
+var correct = schema({ bar: 43 })
+var correct2 = schema({ bar: null })
+var correct3 = schema({ bar: undefined })
+var correct4 = schema({})
+var error = schema({ bar: "foo"})
+
+assert.deepEqual(
+    [null, null, null, null]
+    , [correct, correct2, correct3, correct4]
+)
+assert.deepEqual([
+    "bar is not a number"
+], error)
+
+console.log("correct", correct, "correct2", correct2, "correct3"
+    , correct3, "\ncorrect4", correct4, "error", error)
+```
+
 ## Installation
 
 `npm install valid-schema`

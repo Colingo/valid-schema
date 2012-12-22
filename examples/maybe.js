@@ -4,26 +4,22 @@ var validate = require("../index")
 var Maybe = require("../maybe")
 
 var schema = validate({
-    prop: Maybe(Number)
-}, "schema with optional values: ")
-
-var valid = schema({
-    prop: 42
+    bar: Maybe(Number)
 })
 
-console.log("valid", valid)
-assert.equal(valid, null)
+var correct = schema({ bar: 43 })
+var correct2 = schema({ bar: null })
+var correct3 = schema({ bar: undefined })
+var correct4 = schema({})
+var error = schema({ bar: "foo"})
 
-var valid2 = schema({})
-
-console.log("valid2", valid2)
-assert.equal(valid2, null)
-
-var error = schema({
-    prop: "invalid"
-})
-
-console.log("error", error)
+assert.deepEqual(
+    [null, null, null, null]
+    , [correct, correct2, correct3, correct4]
+)
 assert.deepEqual([
-    "prop is not a number"
+    "bar is not a number"
 ], error)
+
+console.log("correct", correct, "correct2", correct2, "correct3"
+    , correct3, "\ncorrect4", correct4, "error", error)

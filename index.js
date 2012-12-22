@@ -3,6 +3,7 @@ module.exports = validate
 var toArray = require("to-array")
 
 var union = require("./lib/union")
+var flatten = require("flatten")
 var cleanse = require("./cleanse")
 
 function validate(definition) {
@@ -17,7 +18,7 @@ function validate(definition) {
             map(checkKey).
             filter(Boolean)
 
-        return errors.length ? errors : null
+        return errors.length ? flatten(errors) : null
 
         function checkKey(key) {
             var value = data[key]
@@ -31,7 +32,6 @@ function validate(definition) {
         }
     }
 }
-
 
 function cleanseSchema(definition) {
     return Object.keys(definition).reduce(function (acc, key) {

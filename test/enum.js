@@ -1,27 +1,19 @@
 var test = require("tape")
+var validate = require("../index")
+var Enum = require("../enum")
 
-    , validate = require("../index")
-    , Enum = require("../enum")
-
-
-test("enum case", function (t) {
+test(function (assert) {
     var schema = validate({
         foo: Enum("one", "two", "three")
     })
 
-    var correct = schema({
-        foo: "one"
-    })
+    var correct = schema({ foo: "one" })
+    var wrong = schema({ foo: "four" })
 
-    t.equal(null, correct)
-
-    var error = schema({
-        foo: "four"
-    })
-
-    t.deepEqual([
+    assert.equal(null, correct)
+    assert.deepEqual([
         "four is not a valid enum member for foo"
-    ], error)
+    ], wrong)
 
-    t.end()
+    assert.end()
 })

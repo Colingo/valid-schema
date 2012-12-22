@@ -17,7 +17,8 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "to-array": "~0.1.3"
+    "to-array": "~0.1.3",
+    "flatten": "0.0.1"
   },
   "devDependencies": {
     "tape": "~0.1.5",
