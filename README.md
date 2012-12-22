@@ -15,35 +15,43 @@ You can then call the returned function with any data and
     or null.
 
 ```js
-var validate = require("../index")
+var assert = require("assert")
+
+var validate = require("valid-schema")
 
 var isValid = validate({
-    foo: String
-    , bar: Boolean
-    , x: Object
-    , y: Number
-    , foos: [String]
+    a: String
+    , b: Boolean
+    , c: Object
+    , d: Number
+    , e: [String]
 }, "not valid: ")
 
 var error = isValid({
-    foo: "some string"
-    , bar: "invalid string"
+    a: "some string"
+    , b: "invalid string"
 })
 
-// bar is not a boolean
 console.log("error", error)
+assert.deepEqual([
+    "b is not a boolean"
+    , "c is not an object"
+    , "d is not a number"
+    , "e is not an array"
+], error)
 
 var correct = isValid({
-    foo: "some string"
-    , foos: ["array of strings"]
-    , bar: true
-    , x: {
+    a: "some string"
+    , b: true
+    , c: {
         "arbitary": "object"
     }
+    , d: 42
+    , e: ["array of strings"]
 })
 
-// undefined
 console.log("correct", correct)
+assert.equal(null, correct)
 ```
 
 ## kitchen sink
