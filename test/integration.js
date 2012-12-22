@@ -39,6 +39,7 @@ test("integration", function (t) {
         // self documenting!
         , k: ObjectID
         // optional value. May be null, undefined or not existant
+        // if it exists it has to be a string
         , l: Maybe(String)
     })
 
