@@ -20,7 +20,7 @@
     "to-array": "~0.1.3"
   },
   "devDependencies": {
-    "tape": "~0.1.0",
+    "tape": "~0.1.5",
     "browserify": "~1.16.6",
     "testem": "~0.2.50"
   },

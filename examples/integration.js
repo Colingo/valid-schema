@@ -1,54 +1,9 @@
-# valid-schema
+var assert = require("assert")
 
-[![build status](https://secure.travis-ci.org/Colingo/valid-schema.png)](http://travis-ci.org/Colingo/valid-schema)
-
-[![browser support](http://ci.testling.com/Colingo/valid-schema.png)](http://ci.testling.com/Colingo/valid-schema)
-
-Validate objects against schemas
-
-## Example
-
-`validate` creates validation functions based on an schema object.
-
-You can then call the returned function with any data and
-    the validation function will tell you either a errors array
-    or null.
-
-```js
 var validate = require("../index")
+var Enum = require("../enum")
+var Maybe = require("../maybe")
 
-var isValid = validate({
-    foo: String
-    , bar: Boolean
-    , x: Object
-    , y: Number
-    , foos: [String]
-}, "not valid: ")
-
-var error = isValid({
-    foo: "some string"
-    , bar: "invalid string"
-})
-
-// bar is not a boolean
-console.log("error", error)
-
-var correct = isValid({
-    foo: "some string"
-    , foos: ["array of strings"]
-    , bar: true
-    , x: {
-        "arbitary": "object"
-    }
-})
-
-// undefined
-console.log("correct", correct)
-```
-
-## kitchen sink
-
-```js
 var ObjectID = String
 
 var schema = validate({
@@ -103,15 +58,5 @@ var correct = schema({
     , k: "12541-1awra2-163;a-afawf5"
 })
 
-console.log("large schema is correct?", correct)
-```
-
-## Installation
-
-`npm install valid-schema`
-
-## Contributors
-
- - Raynos
-
-## MIT Licenced
+console.log("correct", correct)
+assert.equal(null, correct)

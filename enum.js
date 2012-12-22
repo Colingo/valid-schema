@@ -1,23 +1,21 @@
 var toArray = require("to-array")
 
-$enum.validator = [function check(value) {
-    return value instanceof Enum
-}, function validator(value, key, schema) {
-    var valid = schema.values.some(function (type) {
-        return type === value
-    })
+module.exports = Enum
 
-    if (!valid) {
-        return value + " is not a valid enum member for " + key
+function Enum() {
+    var values = toArray(arguments)
+
+    return validate
+
+    function validate(value, key) {
+        var valid = values.some(equal, [value])
+
+        if (!valid) {
+            return value + " is not a valid enum member for " + key
+        }
     }
-}]
-
-module.exports = $enum
-
-function $enum() {
-    return new Enum(toArray(arguments))
 }
 
-function Enum(values) {
-    this.values = values
+function equal(value) {
+    return this[0] === value
 }
