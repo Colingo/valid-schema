@@ -127,9 +127,43 @@ objects. If the object matches the initial schema then null is
 returned otherwise an array of validation errors is returned.
 
 If a property in the object is not in the schema then a
-    "prop is not in schema" error is returned
+    "prop is not in schema" error is returned.
+
+Internally every validator is a function. However there are
+    special values which you can have in your schemas which
+    are turned into functions for you. Objects are wrapped by
+    `Hash`, arrays are wrapped by `List` and built ins are
+    wrapped by `Type`
 
 ## Validators
+
+### Arbitary functions
+
+An arbitary function is a validator if it takes `(value, key)`
+    as parameters and either returns nothing or a single
+    validation error
+
+```js
+var assert = require("assert")
+var validate = require("valid-schema")
+
+var schema = validate({
+    magic: function (value) {
+        if (value === 42) {
+            return
+        }
+
+        return "wrong magic value!"
+    }
+})
+
+var correct = schema({ magic: 42 })
+var wrong = schema({ magic: "wrong" })
+
+assert.equal(null, correct)
+assert.deepEqual(["wrong magic value!"], wrong)
+console.log("correct", correct, "wrong", wrong)
+```
 
 ### Builtins
 
@@ -158,32 +192,20 @@ assert.deepEqual([
 console.log("correct", correct, "wrong", wrong)
 ```
 
-### Arbitary functions
-
-An arbitary function is a validator if it takes `(value, key)`
-    as parameters and either returns nothing or a single
-    validation error
+builtins are internally wrapped in types. So the following are
+    the same.
 
 ```js
-var assert = require("assert")
 var validate = require("valid-schema")
+var Type = require("valid-schema/type")
 
 var schema = validate({
-    magic: function (value) {
-        if (value === 42) {
-            return
-        }
-
-        return "wrong magic value!"
-    }
+    foo: Number
 })
 
-var correct = schema({ magic: 42 })
-var wrong = schema({ magic: "wrong" })
-
-assert.equal(null, correct)
-assert.deepEqual(["wrong magic value!"], wrong)
-console.log("correct", correct, "wrong", wrong)
+var schema = validate({
+    foo: Type(Number)
+})
 ```
 
 ### Arrays
@@ -216,6 +238,21 @@ assert.deepEqual([
 console.log("correct", correct, "wrong", wrong)
 ```
 
+Internally list is used. The following are the same.
+
+```js
+var validate = require("valid-schema")
+var List = require("valid-schema/list")
+
+var schema = validate({
+    foo: [String]
+})
+
+var schema = validate({
+    foo: List(String)
+})
+```
+
 ### Nested objects
 
 If you use nested objects in the schema then those nested
@@ -246,6 +283,25 @@ assert.deepEqual([
     , "foo.baz is not an array"
 ], wrong2)
 console.log("correct", correct, "wrong", wrong, "wrong2", wrong2)
+```
+
+Internally hash is used. The following are the same
+
+```js
+var validate = require("valid-schema")
+var Hash = require("valid-schema/hash")
+
+var schema = validate({
+    foo: {
+        bar: String
+    }
+})
+
+var schema = validate({
+    foo: Hash({
+        bar: String
+    })
+})
 ```
 
 ### Enum

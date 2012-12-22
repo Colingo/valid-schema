@@ -1,4 +1,5 @@
-var validate = require("./index")
+module.exports = cleanse
+
 var Hash = require("./hash")
 var List = require("./list")
 var Type = require("./type")
@@ -10,13 +11,11 @@ var builtins = [
     , [Number, Type("number")]
 ]
 
-module.exports = cleanse
-
 function cleanse(validator) {
     if (Array.isArray(validator)) {
-        return List(cleanse(validator[0]))
+        return List(validator[0])
     } else if (typeof validator === "object") {
-        return Hash(validate(validator))
+        return Hash(validator)
     }
 
     for (var i = 0; i < builtins.length; i++) {

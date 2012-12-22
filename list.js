@@ -1,6 +1,10 @@
+var cleanse = require("./cleanse")
+
 module.exports = List
 
 function List(validator) {
+    validator = cleanse(validator)
+
     return list
 
     function list(value, key) {

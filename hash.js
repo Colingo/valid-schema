@@ -1,6 +1,10 @@
+var validate = require("./index")
+
 module.exports = Hash
 
 function Hash(validator) {
+    validator = validate(validator)
+
     return hash
 
     function hash(value, key) {
