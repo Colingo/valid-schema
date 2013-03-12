@@ -2,7 +2,7 @@ module.exports = validate
 
 var toArray = require("to-array")
 
-var union = require("./lib/union")
+var union = require("interset/union")
 var flatten = require("flatten")
 var cleanse = require("./cleanse")
 

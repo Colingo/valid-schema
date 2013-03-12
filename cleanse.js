@@ -26,6 +26,16 @@ function cleanse(validator) {
         }
     }
 
-    return validator
+    if (typeof validator === "function") {
+        return validator
+    }
+
+    return equal
+
+    function equal(x) {
+        if (x !== validator) {
+            return x + " is not equal to " + validator
+        }
+    }
 }
 
