@@ -2,8 +2,8 @@ var toArray = require("to-array")
 
 module.exports = Enum
 
-function Enum() {
-    var values = toArray(arguments)
+function Enum(values) {
+    values = Array.isArray(values) ? values : toArray(arguments)
 
     return validate
 
