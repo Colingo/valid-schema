@@ -19,7 +19,7 @@
   "dependencies": {
     "to-array": "~0.1.3",
     "flatten": "0.0.1",
-    "interset": "0.0.1"
+    "interset": "0.0.2"
   },
   "devDependencies": {
     "tape": "~0.1.5",
